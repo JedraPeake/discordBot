@@ -17,7 +17,9 @@ async def on_ready():
 async def on_message(message):
 	if (message.author == client.user):
 		return
-	if message.content.startswith('!floor'):
-		await message.channel.send(opensea.get_collection('doodles-official'))
+
+	if (message.content.startswith('!floor')):
+		messageArgs = message.content.split()
+		await message.channel.send(opensea.get_collection(messageArgs[1]))
 
 client.run(os.environ['discord_key'])
