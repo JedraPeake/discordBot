@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 import os
 
 # files
@@ -7,19 +8,24 @@ import opensea
 from dotenv import load_dotenv
 load_dotenv()
 
-client = discord.Client()
+description = ''
 
-@client.event
+# investigate this more
+# intents = discord.Intents.default()
+# intents.members = True
+
+bot = commands.Bot(command_prefix='!', description=description)
+
+@bot.event
 async def on_ready():
-	print('We have logged in as {0.user}'.format(client))
+    print('Logged in as')
+    print(bot.user.name)
+    print(bot.user.id)
+    print('------')
 
-@client.event
-async def on_message(message):
-	if (message.author == client.user):
-		return
+@bot.command()
+async def floor(ctx, collection: str):
+    print(collection)
+    await ctx.send(opensea.get_collection(collection))
 
-	if (message.content.startswith('!floor')):
-		messageArgs = message.content.split()
-		await message.channel.send(opensea.get_collection(messageArgs[1]))
-
-client.run(os.environ['discord_key'])
+bot.run(os.environ['discord_key'])
